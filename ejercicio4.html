@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokeAPI - Buscador de Pokemon</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <div class="container section" style="max-width: 500px">
+      <form action="" id="formBuscador" class="box">
+        <p class="title is-5 has-text-centered mb-5">
+          PokeAPI - Buscador de Pokemon
+        </p>
+
+        <div class="field has-addons mb-5">
+          <div class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              id="buscador"
+              placeholder="Ejem. 1"
+              required
+            />
+          </div>
+          <button type="submit" class="button is-primary">Buscar</button>
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo1">Imagen:</label>
+          <img id="campo1" src="" width="200" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo2">Nombre:</label>
+          <input class="input" type="text" id="campo2" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo3">Puntos de Vida:</label>
+          <input class="input" type="text" id="campo3" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo4">Ataque:</label>
+          <input class="input" type="text" id="campo4" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo5">Defensa:</label>
+          <input class="input" type="text" id="campo5" />
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("buscador");
+      const imagen = document.getElementById("campo1");
+      const nombre = document.getElementById("campo2");
+      const vida = document.getElementById("campo3");
+      const ataque = document.getElementById("campo4");
+      const defensa = document.getElementById("campo5");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        obtenerPokemon(id.value);
+      });
+
+      async function obtenerPokemon(id) {
+        try {
+          const API_URL = `https://pokeapi.co/api/v2/pokemon/${id}`;
+          const respuesta = await fetch(API_URL);
+          if (!respuesta.ok) {
+            throw new Error(
+              respuesta.status == 404
+                ? `No se encontro un pokemon con el id ${id}`
+                : "Error de comunicacion",
+            );
+          }
+          const datos = await respuesta.json();
+
+          imagen.src = datos.sprites.front_default;
+          nombre.value = datos.name;
+          vida.value = datos.stats[0].base_stat;
+          ataque.value = datos.stats[1].base_stat;
+          defensa.value = datos.stats[2].base_stat;
+        } catch (e) {
+          imagen.src = "";
+          nombre.value = "";
+          vida.value = "";
+          ataque.value = "";
+          defensa.value = "";
+
+          alert(e);
+        }
+      }
+    </script>
+  </body>
+</html>

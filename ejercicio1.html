@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWAPI - Buscador de Planetas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <div class="container section" style="max-width: 500px">
+      <form action="" id="formBuscador" class="box">
+        <p class="title is-5 has-text-centered mb-5">
+          SWAPI - Buscador de Planetas
+        </p>
+
+        <div class="field has-addons mb-5">
+          <div class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              id="buscador"
+              placeholder="Ejem. 1"
+              required
+            />
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-primary">Buscar</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo1">Nombre:</label>
+          <input class="input" type="text" id="campo1" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo2">Diametro:</label>
+          <input class="input" type="text" id="campo2" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo3">Gravedad:</label>
+          <input class="input" type="text" id="campo3" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo4">Clima:</label>
+          <input class="input" type="text" id="campo4" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo5">Terreno:</label>
+          <input class="input" type="text" id="campo5" />
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("buscador");
+      const nombre = document.getElementById("campo1");
+      const diametro = document.getElementById("campo2");
+      const gravedad = document.getElementById("campo3");
+      const clima = document.getElementById("campo4");
+      const terreno = document.getElementById("campo5");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        obtenerPlaneta(id.value);
+      });
+
+      async function obtenerPlaneta(id) {
+        try {
+          const API_URL = `https://swapi.dev/api/planets/${id}`;
+          const respuesta = await fetch(API_URL);
+          if (!respuesta.ok) {
+            throw new Error(
+              respuesta.status == 404
+                ? `No se encontro un planeta con el id ${id}`
+                : "Error de comunicacion",
+            );
+          }
+          const datos = await respuesta.json();
+
+          nombre.value = datos.name;
+          diametro.value = datos.diameter;
+          gravedad.value = datos.gravity;
+          clima.value = datos.climate;
+          terreno.value = datos.terrain;
+        } catch (e) {
+          nombre.value = "";
+          diametro.value = "";
+          gravedad.value = "";
+          clima.value = "";
+          terreno.value = "";
+
+          alert(e);
+        }
+      }
+    </script>
+  </body>
+</html>

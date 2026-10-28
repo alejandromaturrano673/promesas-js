@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWAPI - Buscador de Naves Espaciales</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <div class="container section" style="max-width: 500px">
+      <form action="" id="formBuscador" class="box">
+        <p class="title is-5 has-text-centered mb-5">
+          SWAPI - Buscador de Naves Espaciales
+        </p>
+
+        <div class="field has-addons mb-5">
+          <div class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              id="buscador"
+              placeholder="Ejem. 2"
+              required
+            />
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-primary">Buscar</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo1">Nombre:</label>
+          <input class="input" type="text" id="campo1" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo2">Modelo:</label>
+          <input class="input" type="text" id="campo2" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo3">Fabricante:</label>
+          <input class="input" type="text" id="campo3" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo4">Pasajeros:</label>
+          <input class="input" type="text" id="campo4" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo5">Longitud:</label>
+          <input class="input" type="text" id="campo5" />
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("buscador");
+      const nombre = document.getElementById("campo1");
+      const modelo = document.getElementById("campo2");
+      const fabricante = document.getElementById("campo3");
+      const pasajeros = document.getElementById("campo4");
+      const longitud = document.getElementById("campo5");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        obtenerNave(id.value);
+      });
+
+      async function obtenerNave(id) {
+        try {
+          const API_URL = `https://swapi.dev/api/starships/${id}`;
+          const respuesta = await fetch(API_URL);
+          if (!respuesta.ok) {
+            throw new Error(
+              respuesta.status == 404
+                ? `No se encontro una nave con el id ${id}`
+                : "Error de comunicacion",
+            );
+          }
+          const datos = await respuesta.json();
+
+          nombre.value = datos.name;
+          modelo.value = datos.model;
+          fabricante.value = datos.manufacturer;
+          pasajeros.value = datos.passengers;
+          longitud.value = datos.length;
+        } catch (e) {
+          nombre.value = "";
+          modelo.value = "";
+          fabricante.value = "";
+          pasajeros.value = "";
+          longitud.value = "";
+
+          alert(e);
+        }
+      }
+    </script>
+  </body>
+</html>

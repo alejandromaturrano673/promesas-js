@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dragon Ball API - Buscador de Personajes</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <div class="container section" style="max-width: 500px">
+      <form action="" id="formBuscador" class="box">
+        <p class="title is-5 has-text-centered mb-5">
+          Dragon Ball API - Buscador de Personajes
+        </p>
+
+        <div class="field has-addons mb-5">
+          <div class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              id="buscador"
+              placeholder="Ejem. 1"
+              required
+            />
+          </div>
+          <button type="submit" class="button is-primary">Buscar</button>
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo1">Nombre:</label>
+          <input class="input" type="text" id="campo1" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo2">Descripcion:</label>
+          <textarea class="textarea" id="campo2" rows="5"></textarea>
+        </div>
+
+        <div class="field">
+          <label class="label" for="campo3">Imagen:</label>
+          <img id="campo3" src="" width="200" />
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("buscador");
+      const nombre = document.getElementById("campo1");
+      const descripcion = document.getElementById("campo2");
+      const imagen = document.getElementById("campo3");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        obtenerPersonaje(id.value);
+      });
+
+      async function obtenerPersonaje(id) {
+        try {
+          const API_URL = `https://dragonball-api.com/api/characters/${id}`;
+          const respuesta = await fetch(API_URL);
+          if (!respuesta.ok) {
+            throw new Error(
+              respuesta.status == 404 || respuesta.status == 400
+                ? `No se encontro un personaje con el id ${id}`
+                : "Error de comunicacion",
+            );
+          }
+          const datos = await respuesta.json();
+
+          nombre.value = datos.name;
+          descripcion.value = datos.description;
+          imagen.src = datos.image;
+        } catch (e) {
+          nombre.value = "";
+          descripcion.value = "";
+          imagen.src = "";
+
+          alert(e);
+        }
+      }
+    </script>
+  </body>
+</html>
